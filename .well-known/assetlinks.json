@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.flagodna.keynotif",
+      "sha256_cert_fingerprints": [
+        "4A:10:63:41:F6:AF:2E:A4:BE:89:BC:3B:17:98:29:03:BC:0A:2F:60:2E:9A:37:C4:7A:BB:3E:62:F7:19:AB:3B"
+      ]
+    }
+  }
+]
