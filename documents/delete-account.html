@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Delete Account — Keynotif</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #ffffff;
+        color: #111;
+        max-width: 520px;
+        margin: 60px auto;
+        padding: 20px;
+        line-height: 1.5;
+      }
+
+      h2 {
+        margin-bottom: 8px;
+      }
+
+      p {
+        color: #555;
+        margin-bottom: 24px;
+      }
+
+      label {
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 14px;
+      }
+
+      textarea {
+        resize: vertical;
+      }
+
+      .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .checkbox input {
+        width: auto;
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        background: #000;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .note {
+        margin-top: 20px;
+        font-size: 13px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Request Data Deletion</h2>
+    <p>
+      Submit a request to delete your Keynotif data. This will open your email
+      app to send the request.
+    </p>
+
+    <form id="deleteForm">
+      <label>Email (required)</label>
+      <input type="email" id="email" required placeholder="you@example.com" />
+
+      <label>Google Account Name (required)</label>
+      <input type="text" id="username" required placeholder="Your Name" />
+
+      <label>Reason (optional)</label>
+      <select id="reason">
+        <option value="No longer using the app">No longer using the app</option>
+        <option value="Privacy concerns">Privacy concerns</option>
+        <option value="Switching to another app">
+          Switching to another app
+        </option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Additional Message (optional)</label>
+      <textarea
+        id="message"
+        rows="4"
+        placeholder="Optional details..."
+      ></textarea>
+
+      <div class="checkbox">
+        <input type="checkbox" id="confirm" required />
+        <label for="confirm"
+          >I confirm this is a legitimate deletion request</label
+        >
+      </div>
+
+      <button type="submit">Send Request</button>
+    </form>
+
+    <p class="note">
+      Requests are typically processed within 7 days. Uninstalling the app
+      removes all local data instantly.
+    </p>
+
+    <script>
+      // Basic email obfuscation
+      const emailUser = "flagodna.com";
+      const emailDomain = "gmail.com";
+      const targetEmail = `${emailUser}@${emailDomain}`;
+
+      document
+        .getElementById("deleteForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value.trim();
+          const username = document.getElementById("username").value.trim();
+          const reason = document.getElementById("reason").value;
+          const message = document.getElementById("message").value.trim();
+
+          const subject = encodeURIComponent("Delete My Keynotif Data");
+
+          const body = encodeURIComponent(
+            `Request Type: Data Deletion
+
+App: Keynotif
+Platform: Android
+
+Email: ${email}
+Google Account Name: ${username}
+Reason: ${reason}
+
+Message:
+${message || "-"}
+
+---
+This request was sent via Keynotif deletion form.`
+          );
+
+          window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+        });
+    </script>
+  </body>
+</html>
