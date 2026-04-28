@@ -9,6 +9,12 @@
       type="image/png"
       href="./assets/images/icon/keynotif.png"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+      rel="stylesheet"
+    />
 
     <script type="application/ld+json">
       {
@@ -24,7 +30,6 @@
               "url": "https://flagodna-developer.github.io/keynotif/assets/icon/keynotif.png"
             }
           },
-
           {
             "@type": "Person",
             "@id": "https://www.wikidata.org/wiki/Q138566666",
@@ -39,7 +44,6 @@
               "https://www.wikidata.org/wiki/Q138566666"
             ]
           },
-
           {
             "@type": "SoftwareApplication",
             "@id": "https://flagodna-developer.github.io/keynotif#app",
@@ -49,12 +53,8 @@
             "operatingSystem": "Android",
             "applicationCategory": "ProductivityApplication",
             "description": "A privacy-first Android app that summarizes notifications into a clean, focused morning digest.",
-            "author": {
-              "@id": "https://www.wikidata.org/wiki/Q138566666"
-            },
-            "publisher": {
-              "@id": "https://flagodna.com/#organization"
-            },
+            "author": { "@id": "https://www.wikidata.org/wiki/Q138566666" },
+            "publisher": { "@id": "https://flagodna.com/#organization" },
             "installUrl": "https://play.google.com/store/apps/details?id=com.flagodna.keynotif",
             "offers": {
               "@type": "Offer",
@@ -62,11 +62,12 @@
               "priceCurrency": "USD"
             },
             "featureList": [
-              "Morning notification digest",
-              "Local-first processing",
-              "Privacy-focused design",
-              "Notification filtering",
-              "Automatic cleanup"
+              "AI-powered notification summarization",
+              "Text-to-speech morning digest",
+              "Google Sign-In",
+              "PII anonymization before AI processing",
+              "Notification filtering and VIP contacts",
+              "Local-first storage with automatic cleanup"
             ]
           }
         ]
@@ -74,249 +75,1027 @@
     </script>
 
     <style>
-      body {
-        font-family: system-ui, -apple-system, sans-serif;
+      :root {
+        --ink: #0d0d0d;
+        --ink-soft: #4a4a4a;
+        --ink-faint: #8a8a8a;
+        --paper: #fafaf8;
+        --paper-warm: #f3f2ee;
+        --accent: #1a1a1a;
+        --accent-light: #e8e6df;
+        --border: #e2e0d9;
+        --green: #2d6a4f;
+        --green-light: #d8f3dc;
+        --radius: 16px;
+        --radius-sm: 8px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
         margin: 0;
-        background: #ffffff;
-        color: #111;
-        line-height: 1.6;
+        padding: 0;
       }
 
-      .container {
-        max-width: 760px;
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", system-ui, sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(250, 250, 248, 0.88);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+      }
+      .nav-inner {
+        max-width: 900px;
         margin: 0 auto;
-        padding: 40px 20px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav-logo {
+        font-family: "DM Serif Display", serif;
+        font-size: 20px;
+        color: var(--ink);
+        text-decoration: none;
+        letter-spacing: -0.3px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 28px;
+        list-style: none;
+      }
+      .nav-links a {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--ink-soft);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .nav-links a:hover {
+        color: var(--ink);
+      }
+      .nav-cta {
+        background: var(--ink);
+        color: var(--paper) !important;
+        padding: 8px 18px;
+        border-radius: 100px;
+        font-weight: 500 !important;
+        transition: opacity 0.15s !important;
+      }
+      .nav-cta:hover {
+        opacity: 0.8;
       }
 
-      .center {
-        text-align: center;
+      /* ── HERO ── */
+      .hero {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 100px 24px 80px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: center;
+      }
+      .hero-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--green-light);
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 5px 12px;
+        border-radius: 100px;
+        margin-bottom: 24px;
+      }
+      .hero-label span {
+        width: 6px;
+        height: 6px;
+        background: var(--green);
+        border-radius: 50%;
+        display: block;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
       }
 
-      h1 {
-        font-size: 40px;
-        margin-bottom: 10px;
+      .hero-title {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(42px, 6vw, 60px);
+        line-height: 1.08;
+        letter-spacing: -1.5px;
+        color: var(--ink);
+        margin-bottom: 22px;
+      }
+      .hero-title em {
+        font-style: italic;
+        color: var(--ink-soft);
+      }
+      .hero-desc {
+        font-size: 17px;
+        color: var(--ink-soft);
+        line-height: 1.7;
+        margin-bottom: 36px;
+        font-weight: 300;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--ink);
+        color: var(--paper);
+        padding: 14px 24px;
+        border-radius: 100px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: transform 0.15s, box-shadow 0.15s;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+      }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--ink-soft);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 400;
+        padding: 14px 4px;
+        border-bottom: 1px solid transparent;
+        transition: color 0.15s, border-color 0.15s;
+      }
+      .btn-secondary:hover {
+        color: var(--ink);
+        border-color: var(--ink);
       }
 
-      h2 {
-        margin-top: 50px;
-        font-size: 22px;
+      /* Hero visual */
+      .hero-visual {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .phone-mockup {
+        width: 220px;
+        height: 420px;
+        background: var(--ink);
+        border-radius: 36px;
+        position: relative;
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.25),
+          0 0 0 1px rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(-2deg);
+        }
+        50% {
+          transform: translateY(-12px) rotate(-2deg);
+        }
+      }
+      .phone-notch {
+        position: absolute;
+        top: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90px;
+        height: 26px;
+        background: #000;
+        border-radius: 20px;
+        z-index: 2;
+      }
+      .phone-screen {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          160deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        display: flex;
+        flex-direction: column;
+        padding: 60px 16px 20px;
+        gap: 10px;
+      }
+      .phone-header {
+        font-family: "DM Serif Display", serif;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .phone-time {
+        font-family: "DM Serif Display", serif;
+        font-size: 28px;
+        color: #fff;
+        letter-spacing: -1px;
+        margin-bottom: 16px;
+      }
+      .notif-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 10px 12px;
+        backdrop-filter: blur(8px);
+      }
+      .notif-app {
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 3px;
+      }
+      .notif-text {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.4;
+        font-weight: 300;
+      }
+      .notif-card.highlight {
+        background: rgba(45, 106, 79, 0.3);
+        border-color: rgba(45, 106, 79, 0.5);
+      }
+      .phone-badge {
+        position: absolute;
+        bottom: -10px;
+        right: -10px;
+        background: var(--green);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 100px;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(45, 106, 79, 0.4);
       }
 
-      p {
-        color: #444;
+      /* ── SECTION WRAPPER ── */
+      .section {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 80px 24px;
       }
-
-      .subtitle {
-        font-size: 18px;
-        color: #666;
+      .section-label {
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin-bottom: 16px;
+      }
+      .section-title {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(30px, 4vw, 42px);
+        line-height: 1.12;
+        letter-spacing: -0.8px;
+        color: var(--ink);
         margin-bottom: 20px;
       }
-
-      .badges img {
-        margin: 6px;
+      .section-body {
+        font-size: 17px;
+        color: var(--ink-soft);
+        line-height: 1.75;
+        font-weight: 300;
+        max-width: 560px;
       }
 
-      .section {
-        margin-top: 40px;
-      }
-
+      /* ── DIVIDER ── */
       .divider {
-        margin: 50px 0;
-        border-top: 1px solid #eee;
+        max-width: 900px;
+        margin: 0 auto;
+        border: none;
+        border-top: 1px solid var(--border);
       }
 
-      .footer {
-        margin-top: 60px;
+      /* ── PROBLEM ── */
+      .problem-section {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 80px 24px;
+      }
+      .problem-inner {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .problem-section .section-label {
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .problem-section .section-title {
+        color: #fff;
+      }
+      .morning-chaos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin: 40px 0;
+      }
+      .chaos-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-sm);
+        padding: 16px 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
         font-size: 14px;
-        color: #666;
-        text-align: center;
+        color: rgba(255, 255, 255, 0.65);
       }
-
-      .quote {
-        text-align: center;
+      .chaos-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .chaos-count {
+        font-family: "DM Serif Display", serif;
+        font-size: 22px;
+        color: #fff;
+        display: block;
+        margin-bottom: 2px;
+      }
+      .problem-statement {
+        font-size: 22px;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.55;
+        font-weight: 300;
+        max-width: 600px;
+        margin-top: 40px;
+        font-family: "DM Serif Display", serif;
         font-style: italic;
-        color: #555;
-        margin-top: 60px;
       }
 
-      ul {
-        padding-left: 20px;
+      /* ── HOW IT WORKS ── */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        margin-top: 48px;
+      }
+      .step {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .step-num {
+        width: 36px;
+        height: 36px;
+        background: var(--accent-light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "DM Serif Display", serif;
+        font-size: 16px;
+        color: var(--ink);
+        flex-shrink: 0;
+      }
+      .step-title {
+        font-weight: 500;
+        font-size: 16px;
+        color: var(--ink);
+      }
+      .step-desc {
+        font-size: 14px;
+        color: var(--ink-soft);
+        line-height: 1.65;
+        font-weight: 300;
       }
 
-      strong {
-        color: #111;
+      /* ── PRINCIPLES ── */
+      .principles-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        margin-top: 48px;
+        border-radius: var(--radius);
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .principle {
+        padding: 32px;
+        background: var(--paper);
+        transition: background 0.2s;
+      }
+      .principle:hover {
+        background: var(--paper-warm);
+      }
+      .principle-icon {
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+      .principle-title {
+        font-weight: 500;
+        font-size: 16px;
+        color: var(--ink);
+        margin-bottom: 8px;
+      }
+      .principle-desc {
+        font-size: 14px;
+        color: var(--ink-soft);
+        line-height: 1.65;
+        font-weight: 300;
       }
 
-      a {
-        color: #000;
+      /* ── LIMITATIONS ── */
+      .limitations-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-top: 40px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .limitation {
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+      .limitation:last-child {
+        border-bottom: none;
+      }
+      .limitation-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--paper-warm);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .limitation-title {
+        font-weight: 500;
+        font-size: 15px;
+        color: var(--ink);
+        margin-bottom: 6px;
+      }
+      .limitation-desc {
+        font-size: 14px;
+        color: var(--ink-soft);
+        line-height: 1.65;
+        font-weight: 300;
+      }
+
+      /* ── CTA ── */
+      .cta-section {
+        background: var(--paper-warm);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 80px 24px;
+        text-align: center;
+      }
+      .cta-inner {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .cta-title {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(32px, 5vw, 48px);
+        letter-spacing: -1px;
+        line-height: 1.1;
+        color: var(--ink);
+        margin-bottom: 16px;
+      }
+      .cta-sub {
+        font-size: 17px;
+        color: var(--ink-soft);
+        margin-bottom: 36px;
+        font-weight: 300;
+      }
+      .platform-tags {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+      .platform-tag {
+        background: var(--accent-light);
+        color: var(--ink-soft);
+        font-size: 12px;
+        padding: 5px 12px;
+        border-radius: 100px;
+        font-weight: 400;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        padding: 40px 24px;
+      }
+      .footer-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .footer-brand {
+        font-family: "DM Serif Display", serif;
+        font-size: 18px;
+        color: var(--ink);
         text-decoration: none;
-        border-bottom: 1px solid #ccc;
+      }
+      .footer-brand span {
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--ink-faint);
+        font-weight: 300;
+        display: block;
+        margin-top: 2px;
+      }
+      .footer-links {
+        display: flex;
+        gap: 24px;
+        list-style: none;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: var(--ink-faint);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .footer-links a:hover {
+        color: var(--ink);
       }
 
-      a:hover {
-        border-bottom: 1px solid #000;
+      /* ── ANIMATIONS ── */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 680px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding: 60px 20px 40px;
+          gap: 48px;
+          text-align: center;
+        }
+        .hero-actions {
+          justify-content: center;
+        }
+        .hero-visual {
+          order: -1;
+        }
+        .phone-mockup {
+          width: 180px;
+          height: 340px;
+        }
+        .steps {
+          grid-template-columns: 1fr;
+        }
+        .principles-grid {
+          grid-template-columns: 1fr;
+        }
+        .footer-inner {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 24px;
+        }
+        .nav-links {
+          display: none;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="center">
-        <h1>Keynotif</h1>
-        <div class="subtitle">Sleep well. Wake informed.</div>
+    <!-- NAV -->
+    <nav>
+      <div class="nav-inner">
+        <a href="#" class="nav-logo">Keynotif</a>
+        <ul class="nav-links">
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#principles">Principles</a></li>
+          <li><a href="#limitations">Limitations</a></li>
+          <li>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.flagodna.keynotif"
+              class="nav-cta"
+              >Download</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-        <p>
-          A native Android app that watches your notifications while you sleep —
-          and greets you in the morning with only what matters.
-        </p>
-
-        <div class="badges">
-          <img
-            src="https://img.shields.io/badge/platform-Android-3DDC84?style=flat-square&logo=android&logoColor=white"
-          />
-          <img
-            src="https://img.shields.io/badge/minSdk-26-lightgrey?style=flat-square"
-          />
-          <img
-            src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"
-          />
+    <!-- HERO -->
+    <section>
+      <div class="hero">
+        <div class="hero-text">
+          <div class="hero-label"><span></span> Now on Android</div>
+          <h1 class="hero-title">Sleep well.<br /><em>Wake informed.</em></h1>
+          <p class="hero-desc">
+            Keynotif collects your notifications while you sleep, then uses AI
+            to summarize them into a calm morning digest — with text-to-speech
+            so you can just <em>listen</em>. Sign in with Google to get started.
+          </p>
+          <div class="hero-actions">
+            <a
+              href="https://play.google.com/store/apps/details?id=com.flagodna.keynotif"
+              class="btn-primary"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M3.18 23.65c.33.18.7.22 1.06.12l.09-.05 11.3-6.52-2.4-2.4L3.18 23.65zm14.6-8.43L15.36 12l2.43-3.22 4.43 2.56a1.5 1.5 0 0 1 0 2.62l-4.44 2.26zm-13.54 7.8 9.96-9.96-2.42-2.42L2.54 20.8c.24.6.97.85 1.7 2.22zM3.18.35 13.2 10.38l-2.42 2.42L2.12 3.52a1.5 1.5 0 0 1 1.06-3.17z"
+                />
+              </svg>
+              Get on Google Play
+            </a>
+            <a href="#how" class="btn-secondary"> See how it works → </a>
+          </div>
         </div>
 
-        <p>
-          Built by <a href="https://flagodna.com" target="_blank">FlagoDNA</a> —
-          foundational tools for intentional living.
+        <div class="hero-visual">
+          <div style="position: relative; display: inline-block">
+            <div class="phone-mockup">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="phone-header">Good morning</div>
+                <div class="phone-time">7:04 AM</div>
+                <div class="notif-card highlight">
+                  <div class="notif-app">✦ AI Summary</div>
+                  <div class="notif-text">
+                    You have 1 message from family, a 9 AM meeting invite, and 2
+                    dev mentions — nothing urgent overnight.
+                  </div>
+                </div>
+                <div class="notif-card">
+                  <div class="notif-app">🔊 Listen</div>
+                  <div
+                    class="notif-text"
+                    style="display: flex; align-items: center; gap: 8px"
+                  >
+                    <span
+                      style="font-size: 9px; color: rgba(255, 255, 255, 0.5)"
+                      >▶ Playing digest...</span
+                    >
+                    <span
+                      style="
+                        flex: 1;
+                        height: 2px;
+                        background: rgba(255, 255, 255, 0.15);
+                        border-radius: 2px;
+                        position: relative;
+                        overflow: hidden;
+                      "
+                    >
+                      <span
+                        style="
+                          position: absolute;
+                          left: 0;
+                          top: 0;
+                          height: 100%;
+                          width: 40%;
+                          background: rgba(255, 255, 255, 0.5);
+                          border-radius: 2px;
+                        "
+                      ></span>
+                    </span>
+                  </div>
+                </div>
+                <div class="notif-card">
+                  <div class="notif-app">🔒 Privacy</div>
+                  <div class="notif-text">
+                    PII anonymized before AI · All data deleted daily
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-badge">✦ 40 notifs → 3 cards</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- PROBLEM -->
+    <section class="problem-section">
+      <div class="problem-inner">
+        <p class="section-label">The problem</p>
+        <h2 class="section-title" style="color: #fff">
+          Your morning attention is being stolen.
+        </h2>
+
+        <div class="morning-chaos">
+          <div class="chaos-item">
+            <div class="chaos-icon">💬</div>
+            <div>
+              <span class="chaos-count">38</span>
+              WhatsApp messages across 6 group chats
+            </div>
+          </div>
+          <div class="chaos-item">
+            <div class="chaos-icon">📧</div>
+            <div>
+              <span class="chaos-count">14</span>
+              Promotional emails to delete, one by one
+            </div>
+          </div>
+          <div class="chaos-item">
+            <div class="chaos-icon">🔔</div>
+            <div>
+              <span class="chaos-count">22</span>
+              Instagram, Twitter, and app pings
+            </div>
+          </div>
+          <div class="chaos-item">
+            <div class="chaos-icon">⏱️</div>
+            <div>
+              <span class="chaos-count">20+</span>
+              Minutes gone before your day even starts
+            </div>
+          </div>
+        </div>
+
+        <p class="problem-statement">
+          "You didn't need all of that.<br />You needed to know what actually
+          matters."
         </p>
       </div>
+    </section>
 
-      <div class="divider"></div>
-
-      <div class="section">
-        <h2>The Problem</h2>
-
-        <p>You wake up.</p>
-
-        <p>
-          Before your day even starts, you're already lost — scrolling through
-          40 WhatsApp messages across group chats nobody asked you to join,
-          deleting promotional emails one by one, tapping through Instagram
-          notifications that mean nothing, checking Twitter mentions that can
-          wait.
-        </p>
-
-        <p>Twenty minutes gone. Day hasn't started. Brain already tired.</p>
-
-        <p>
-          You didn't need all of that. You needed to know
-          <strong>what actually matters.</strong>
-        </p>
-      </div>
-
-      <div class="section">
-        <h2>What Keynotif Does</h2>
-
-        <p>
-          Keynotif watches your notifications while you sleep. When you wake up
-          and open the app, you don't get a flood. You get a
-          <strong>digest</strong> — a calm, clean summary of everything that
-          happened overnight, filtered down to what's actually worth your
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="fade-up">
+        <p class="section-label">How it works</p>
+        <h2 class="section-title">Three steps to a calmer morning.</h2>
+        <p class="section-body">
+          Keynotif runs quietly in the background so you don't have to manage
+          it. You just wake up, open the app, and know what needs your
           attention.
         </p>
-
-        <p>One screen. Thirty seconds. Done.</p>
       </div>
 
-      <div class="section">
-        <h2>Screenshots</h2>
-        <p>Coming soon — first build in progress.</p>
+      <div class="steps fade-up">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">It collects while you sleep</div>
+          <p class="step-desc">
+            Keynotif runs quietly in the background after your bedtime —
+            capturing notifications from every app, never waking you. Your sleep
+            stays intact.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">AI summarizes them privately</div>
+          <p class="step-desc">
+            In the morning, your notifications are anonymized first — emails,
+            numbers, and links replaced with placeholders — then sent to AI for
+            summarization. Your raw data never leaves protected.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Read it or just listen</div>
+          <p class="step-desc">
+            Open the app and read your digest, or tap play and let
+            text-to-speech read it aloud while you make coffee. One minute. Full
+            picture. Ready to start.
+          </p>
+        </div>
       </div>
+    </section>
 
-      <div class="section">
-        <h2>Core Principles</h2>
+    <hr class="divider" />
 
-        <p>
-          <strong>Signal over noise.</strong><br />
-          Not all notifications are equal. Keynotif treats them that way.
-        </p>
-
-        <p>
-          <strong>Your morning is sacred.</strong><br />
-          The first minutes of your day shape everything that follows. Keynotif
-          protects them.
-        </p>
-
-        <p>
-          <strong>Calm is a feature.</strong><br />
-          No red badges. No anxiety-inducing counts. Just clarity.
-        </p>
-
-        <p>
-          <strong>You decide what matters.</strong><br />
-          Keynotif learns your priorities. VIP contacts always surface. Trash
-          never does.
-        </p>
-      </div>
-
-      <div class="section">
-        <h2>Known Limitations</h2>
-
-        <p>
-          <strong>OEM Battery Optimization</strong><br />
-          Manufacturers like Xiaomi, OPPO, Realme, and Vivo aggressively kill
-          background services. Keynotif includes onboarding guidance to
-          whitelist the app. Without this, it may not run overnight reliably.
-        </p>
-
-        <p>
-          <strong>Notification Content Access</strong><br />
-          Some apps (such as banking or secure messaging apps) restrict
-          notification content. Keynotif may detect the notification but cannot
-          always access its full content.
-        </p>
-
-        <p>
-          <strong>No iOS Support</strong><br />
-          iOS does not provide notification listener APIs for third-party apps.
-          Keynotif is Android-only.
+    <!-- PRINCIPLES -->
+    <section class="section" id="principles">
+      <div class="fade-up">
+        <p class="section-label">Design principles</p>
+        <h2 class="section-title">Built with intention.</h2>
+        <p class="section-body">
+          Every decision in Keynotif was made to protect your attention, not
+          monetize it.
         </p>
       </div>
 
-      <div class="quote">
-        <p>
-          “A keynote is the most important note — the one that sets the tone for
-          everything that follows.”
+      <div class="principles-grid fade-up">
+        <div class="principle">
+          <div class="principle-icon">🎯</div>
+          <div class="principle-title">Signal over noise</div>
+          <p class="principle-desc">
+            Not all notifications deserve equal weight. Keynotif treats them
+            differently — surfacing what needs you, silencing what doesn't.
+          </p>
+        </div>
+        <div class="principle">
+          <div class="principle-icon">🌅</div>
+          <div class="principle-title">Your morning is sacred</div>
+          <p class="principle-desc">
+            The first minutes of your day set the tone for everything that
+            follows. Keynotif guards them so you start on your terms, not
+            someone else's.
+          </p>
+        </div>
+        <div class="principle">
+          <div class="principle-icon">🔒</div>
+          <div class="principle-title">Privacy without compromise</div>
+          <p class="principle-desc">
+            Before AI ever sees your data, sensitive content is automatically
+            anonymized — emails, phone numbers, OTPs, and links replaced with
+            placeholders. Your raw notifications stay on-device.
+          </p>
+        </div>
+        <div class="principle">
+          <div class="principle-icon">🎛️</div>
+          <div class="principle-title">You define what matters</div>
+          <p class="principle-desc">
+            Set your VIP contacts, mute categories, and choose your digest time.
+            Keynotif adapts to your life — not the other way around.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- LIMITATIONS -->
+    <section class="section" id="limitations">
+      <div class="fade-up">
+        <p class="section-label">Known limitations</p>
+        <h2 class="section-title">Honest about the edges.</h2>
+        <p class="section-body">
+          Some things are outside our control. We'd rather you know upfront than
+          be surprised later.
         </p>
-        <p>
-          Keynotif is your keynote notification — the first, most important view
-          of your day.
-        </p>
-        <p><strong>First class. Every morning.</strong></p>
       </div>
 
-      <div class="footer">
-        <p>© 2026 FlagoDNA</p>
-
-        <p>
-          <a
-            href="https://flagodna-developer.github.io/keynotif/documents/privacy-policy"
-            target="_blank"
-          >
-            Privacy Policy
-          </a>
-          ·
-          <a
-            href="https://flagodna-developer.github.io/keynotif/documents/term-of-services"
-            target="_blank"
-          >
-            Terms of Service
-          </a>
-          ·
-          <a
-            href="https://flagodna-developer.github.io/keynotif/delete-account.html"
-            target="_blank"
-          >
-            Delete Account
-          </a>
-        </p>
+      <div class="limitations-list fade-up">
+        <div class="limitation">
+          <div class="limitation-icon">🔋</div>
+          <div>
+            <div class="limitation-title">
+              Aggressive battery optimization (Xiaomi, OPPO, Realme, Vivo)
+            </div>
+            <p class="limitation-desc">
+              Many Android manufacturers aggressively terminate background
+              services to save battery. Keynotif includes step-by-step
+              onboarding to whitelist the app — but without this step, overnight
+              listening may not work reliably on these devices.
+            </p>
+          </div>
+        </div>
+        <div class="limitation">
+          <div class="limitation-icon">🔐</div>
+          <div>
+            <div class="limitation-title">Restricted notification content</div>
+            <p class="limitation-desc">
+              Certain apps — particularly banking, secure messaging, and some
+              OEM apps — limit what third-party listeners can see. Keynotif can
+              detect that a notification arrived but may not access its full
+              content.
+            </p>
+          </div>
+        </div>
+        <div class="limitation">
+          <div class="limitation-icon">🍎</div>
+          <div>
+            <div class="limitation-title">Android only — no iOS</div>
+            <p class="limitation-desc">
+              iOS does not expose notification listener APIs to third-party
+              apps. Keynotif is built on Android's NotificationListenerService
+              and cannot function on iOS. This is a platform limitation, not a
+              roadmap item.
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="cta-inner fade-up">
+        <h2 class="cta-title">
+          Your keynote notification.<br />First class. Every morning.
+        </h2>
+        <p class="cta-sub">
+          Free to download. Sign in with Google. No ads. Just clarity.
+        </p>
+        <a
+          href="https://play.google.com/store/apps/details?id=com.flagodna.keynotif"
+          class="btn-primary"
+          style="display: inline-flex"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M3.18 23.65c.33.18.7.22 1.06.12l.09-.05 11.3-6.52-2.4-2.4L3.18 23.65zm14.6-8.43L15.36 12l2.43-3.22 4.43 2.56a1.5 1.5 0 0 1 0 2.62l-4.44 2.26zm-13.54 7.8 9.96-9.96-2.42-2.42L2.54 20.8c.24.6.97.85 1.7 2.22zM3.18.35 13.2 10.38l-2.42 2.42L2.12 3.52a1.5 1.5 0 0 1 1.06-3.17z"
+            />
+          </svg>
+          Download on Google Play
+        </a>
+        <div class="platform-tags">
+          <span class="platform-tag">Android 8.0+</span>
+          <span class="platform-tag">Free</span>
+          <span class="platform-tag">Google Sign-In</span>
+          <span class="platform-tag">AI Summaries</span>
+          <span class="platform-tag">Text-to-Speech</span>
+          <span class="platform-tag">PII Anonymized</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <a href="https://flagodna.com" class="footer-brand" target="_blank">
+          FlagoDNA
+          <span>Foundational tools for intentional living</span>
+        </a>
+        <ul class="footer-links">
+          <li>
+            <a href="https://keynotif.web.app/privacy-policy/index.html"
+              >Privacy Policy</a
+            >
+          </li>
+          <li>
+            <a href="https://keynotif.web.app/term-of-services/index.html"
+              >Terms of Service</a
+            >
+          </li>
+          <li>
+            <a href="https://keynotif.web.app/delete-account/index.html"
+              >Delete Account</a
+            >
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <script>
+      // Fade-up on scroll
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document
+        .querySelectorAll(".fade-up")
+        .forEach((el) => observer.observe(el));
+    </script>
   </body>
 </html>
